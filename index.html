@@ -51,6 +51,8 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
+            user-select: none;
+            cursor: default;
         }
 
         .time-unit:hover {
@@ -86,6 +88,132 @@
             color: #f5f5f5;
         }
 
+        /* Easter Egg Game Styles */
+        .easter-egg-game {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 1000;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .game-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .game-title {
+            font-size: 2rem;
+            color: #4CAF50;
+            margin-bottom: 1rem;
+        }
+
+        .game-info {
+            display: flex;
+            gap: 2rem;
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+        }
+
+        .game-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            margin-bottom: 2rem;
+            max-width: 320px;
+        }
+
+        .mole-hole {
+            width: 80px;
+            height: 80px;
+            background: #2a2a2a;
+            border-radius: 50%;
+            border: 3px solid #444;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .mole {
+            width: 60px;
+            height: 60px;
+            background: #8B4513;
+            border-radius: 50%;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            animation: moleUp 0.3s ease-out;
+            border: 2px solid #654321;
+        }
+
+        .mole.active {
+            display: flex;
+        }
+
+        @keyframes moleUp {
+            0% { transform: translateY(100%); }
+            100% { transform: translateY(0); }
+        }
+
+        .mole:before {
+            content: '🐸';
+            font-size: 2rem;
+        }
+
+        .mole-hole:active {
+            transform: scale(0.95);
+        }
+
+        .game-controls {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .game-btn {
+            padding: 10px 20px;
+            background: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background 0.3s ease;
+        }
+
+        .game-btn:hover {
+            background: #45a049;
+        }
+
+        .game-btn.secondary {
+            background: #666;
+        }
+
+        .game-btn.secondary:hover {
+            background: #777;
+        }
+
+        .hint {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.6rem;
+            opacity: 0.3;
+            text-align: center;
+            color: #666;
+        }
+
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
@@ -118,6 +246,21 @@
             .time-label {
                 font-size: 0.65rem;
             }
+
+            .game-grid {
+                max-width: 280px;
+                gap: 10px;
+            }
+
+            .mole-hole {
+                width: 65px;
+                height: 65px;
+            }
+
+            .mole {
+                width: 45px;
+                height: 45px;
+            }
         }
 
         @media (max-width: 480px) {
@@ -138,6 +281,15 @@
             .time-label {
                 font-size: 0.6rem;
             }
+
+            .game-info {
+                gap: 1rem;
+                font-size: 1rem;
+            }
+
+            .title {
+                font-size: 1.4rem;
+            }
         }
     </style>
 </head>
@@ -152,7 +304,7 @@
                 <span class="time-number" id="hours">00</span>
                 <span class="time-label">Heures</span>
             </div>
-            <div class="time-unit">
+            <div class="time-unit" id="secretTrigger">
                 <span class="time-number" id="minutes">00</span>
                 <span class="time-label">Minutes</span>
             </div>
@@ -164,6 +316,45 @@
         
         <div class="message" id="message">
             🎉 C'est le moment ! 🎉
+        </div>
+
+        <div class="hint">
+            Cliquez 5 fois sur les minutes...
+        </div>
+    </div>
+
+    <!-- Easter Egg Game -->
+    <div class="easter-egg-game" id="easterEggGame">
+        <div class="game-header">
+            <h2 class="game-title">🎮 Tape la Grenouille ! 🐸</h2>
+            <div class="game-info">
+                <div>Score: <span id="gameScore">0</span></div>
+                <div>Temps: <span id="gameTime">30</span>s</div>
+            </div>
+        </div>
+        
+        <div class="game-grid" id="gameGrid">
+            <div class="mole-hole" data-hole="0"><div class="mole"></div></div>
+            <div class="mole-hole" data-hole="1"><div class="mole"></div></div>
+            <div class="mole-hole" data-hole="2"><div class="mole"></div></div>
+            <div class="mole-hole" data-hole="3"><div class="mole"></div></div>
+            <div class="mole-hole" data-hole="4"><div class="mole"></div></div>
+            <div class="mole-hole" data-hole="5"><div class="mole"></div></div>
+            <div class="mole-hole" data-hole="6"><div class="mole"></div></div>
+            <div class="mole-hole" data-hole="7"><div class="mole"></div></div>
+            <div class="mole-hole" data-hole="8"><div class="mole"></div></div>
+            <div class="mole-hole" data-hole="9"><div class="mole"></div></div>
+            <div class="mole-hole" data-hole="10"><div class="mole"></div></div>
+            <div class="mole-hole" data-hole="11"><div class="mole"></div></div>
+            <div class="mole-hole" data-hole="12"><div class="mole"></div></div>
+            <div class="mole-hole" data-hole="13"><div class="mole"></div></div>
+            <div class="mole-hole" data-hole="14"><div class="mole"></div></div>
+            <div class="mole-hole" data-hole="15"><div class="mole"></div></div>
+        </div>
+        
+        <div class="game-controls">
+            <button class="game-btn" id="startGame">Commencer</button>
+            <button class="game-btn secondary" id="closeGame">Fermer</button>
         </div>
     </div>
 
@@ -196,6 +387,186 @@
                 document.getElementById('message').style.display = 'block';
             }
         }
+
+        // Easter Egg - Click counter on minutes
+        let clickCount = 0;
+        const secretTrigger = document.getElementById('secretTrigger');
+        
+        secretTrigger.addEventListener('click', () => {
+            clickCount++;
+            
+            // Effet visuel subtil
+            secretTrigger.style.transform = 'scale(1.05)';
+            setTimeout(() => {
+                secretTrigger.style.transform = 'scale(1)';
+            }, 100);
+            
+            if (clickCount >= 5) {
+                clickCount = 0;
+                openEasterEgg();
+            }
+            
+            // Reset du compteur après 3 secondes d'inactivité
+            setTimeout(() => {
+                if (clickCount < 5) {
+                    clickCount = 0;
+                }
+            }, 3000);
+        });
+
+        // Gestion du jeu Easter Egg
+        const easterEggGame = document.getElementById('easterEggGame');
+        const gameScore = document.getElementById('gameScore');
+        const gameTime = document.getElementById('gameTime');
+        const startGameBtn = document.getElementById('startGame');
+        const closeGameBtn = document.getElementById('closeGame');
+        const holes = document.querySelectorAll('.mole-hole');
+
+        let score = 0;
+        let timeLeft = 30;
+        let gameActive = false;
+        let gameInterval;
+        let moleTimeout;
+
+        function openEasterEgg() {
+            easterEggGame.style.display = 'flex';
+            resetGame();
+        }
+
+        function closeEasterEgg() {
+            easterEggGame.style.display = 'none';
+            if (gameActive) {
+                endGame();
+            }
+        }
+
+        function resetGame() {
+            score = 0;
+            timeLeft = 30;
+            gameActive = false;
+            gameScore.textContent = score;
+            gameTime.textContent = timeLeft;
+            startGameBtn.textContent = 'Commencer';
+            
+            // Cacher toutes les taupes
+            holes.forEach(hole => {
+                hole.querySelector('.mole').classList.remove('active');
+            });
+        }
+
+        function startGame() {
+            if (!gameActive) {
+                gameActive = true;
+                startGameBtn.textContent = 'En cours...';
+                
+                // Timer du jeu
+                gameInterval = setInterval(() => {
+                    timeLeft--;
+                    gameTime.textContent = timeLeft;
+                    
+                    if (timeLeft <= 0) {
+                        endGame();
+                    }
+                }, 1000);
+                
+                // Faire apparaître les taupes
+                showMole();
+            }
+        }
+
+        function endGame() {
+            gameActive = false;
+            clearInterval(gameInterval);
+            clearTimeout(moleTimeout);
+            
+            // Cacher toutes les taupes
+            holes.forEach(hole => {
+                hole.querySelector('.mole').classList.remove('active');
+            });
+            
+            startGameBtn.textContent = `Fini! Score: ${score}`;
+            
+            setTimeout(() => {
+                startGameBtn.textContent = 'Recommencer';
+            }, 2000);
+        }
+
+        function showMole() {
+            if (!gameActive) return;
+            
+            // Cacher toutes les taupes
+            holes.forEach(hole => {
+                hole.querySelector('.mole').classList.remove('active');
+            });
+            
+            // Calculer la progression du jeu (0 = début, 1 = fin)
+            const gameProgress = (30 - timeLeft) / 30;
+            
+            // Déterminer le nombre de grenouilles (1 au début, 2 après 10 secondes)
+            let numberOfMoles = 1;
+            if (gameProgress > 0.33) numberOfMoles = 2; // Après 10 secondes (10/30 = 0.33)
+            
+            // Choisir des trous aléatoires différents
+            const availableHoles = [...Array(holes.length).keys()];
+            const selectedHoles = [];
+            
+            for (let i = 0; i < numberOfMoles; i++) {
+                if (availableHoles.length > 0) {
+                    const randomIndex = Math.floor(Math.random() * availableHoles.length);
+                    const holeIndex = availableHoles.splice(randomIndex, 1)[0];
+                    selectedHoles.push(holeIndex);
+                    holes[holeIndex].querySelector('.mole').classList.add('active');
+                }
+            }
+            
+            // Calculer la vitesse (plus rapide avec le temps)
+            const baseSpeed = 800; // Vitesse de base (ms)
+            const minSpeed = 500;   // Vitesse minimum (moins rapide qu'avant)
+            const currentSpeed = Math.max(minSpeed, baseSpeed - (gameProgress * 300));
+            
+            // Calculer le délai avant la prochaine apparition
+            const baseDelay = 1000; // Délai de base
+            const minDelay = 400;   // Délai minimum (moins rapide qu'avant)
+            const currentDelay = Math.max(minDelay, baseDelay - (gameProgress * 600));
+            
+            // Programmer la disparition des taupes
+            moleTimeout = setTimeout(() => {
+                selectedHoles.forEach(holeIndex => {
+                    holes[holeIndex].querySelector('.mole').classList.remove('active');
+                });
+                
+                // Petit délai avant la prochaine vague
+                setTimeout(showMole, currentDelay * 0.2);
+            }, currentSpeed);
+        }
+
+        // Gestion des clics sur les taupes
+        holes.forEach(hole => {
+            hole.addEventListener('click', () => {
+                const mole = hole.querySelector('.mole');
+                if (mole.classList.contains('active') && gameActive) {
+                    score++;
+                    gameScore.textContent = score;
+                    mole.classList.remove('active');
+                    
+                    // Effet visuel
+                    hole.style.transform = 'scale(1.1)';
+                    setTimeout(() => {
+                        hole.style.transform = 'scale(1)';
+                    }, 100);
+                }
+            });
+        });
+
+        // Event listeners pour les boutons
+        startGameBtn.addEventListener('click', () => {
+            if (!gameActive && timeLeft <= 0) {
+                resetGame();
+            }
+            startGame();
+        });
+
+        closeGameBtn.addEventListener('click', closeEasterEgg);
 
         // Mettre à jour le décompte chaque seconde
         updateCountdown();
