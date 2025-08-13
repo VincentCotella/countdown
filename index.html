@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Décompte - 22 Août 2025</title>
+    <title>22 Août 2025</title>
     <style>
         * {
             margin: 0;
@@ -13,225 +13,233 @@
 
         body {
             font-family: 'Arial', sans-serif;
-            background: #1a1a1a;
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
             color: #f5f5f5;
             overflow: hidden;
+            position: relative;
+        }
+
+        /* Particules de fond animées */
+        .particles {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .particle {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            animation: float linear infinite;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-10px) rotate(360deg);
+                opacity: 0;
+            }
         }
 
         .container {
             text-align: center;
             padding: 2rem;
-            max-width: 500px;
+            max-width: 600px;
             width: 100%;
+            z-index: 10;
+            position: relative;
+        }
+
+        .title {
+            font-size: 2.5rem;
+            font-weight: 300;
+            margin-bottom: 3rem;
+            opacity: 0.9;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+            animation: glow 3s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from {
+                text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+            }
+            to {
+                text-shadow: 0 2px 20px rgba(255, 255, 255, 0.1);
+            }
         }
 
         .countdown {
             display: flex;
             justify-content: center;
-            gap: 1rem;
-            background: #2a2a2a;
-            border-radius: 15px;
-            padding: 2rem;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-            border: 1px solid #333;
+            gap: 1.5rem;
+            background: rgba(42, 42, 42, 0.8);
+            border-radius: 20px;
+            padding: 3rem 2rem;
+            box-shadow: 
+                0 8px 32px rgba(0, 0, 0, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
         }
 
         .time-unit {
-            background: #333;
-            border-radius: 10px;
-            padding: 1.5rem 0.8rem;
-            border: 1px solid #444;
+            background: rgba(51, 51, 51, 0.9);
+            border-radius: 15px;
+            padding: 2rem 1rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
             transition: all 0.3s ease;
-            min-width: 80px;
+            min-width: 100px;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             user-select: none;
-            cursor: default;
+            backdrop-filter: blur(5px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .time-unit::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transition: left 0.5s;
         }
 
         .time-unit:hover {
-            background: #3a3a3a;
+            background: rgba(58, 58, 58, 0.9);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+        }
+
+        .time-unit:hover::before {
+            left: 100%;
         }
 
         .time-number {
-            font-size: 2.5rem;
+            font-size: 3rem;
             font-weight: 600;
             display: block;
-            margin-bottom: 0.3rem;
+            margin-bottom: 0.5rem;
             color: #f5f5f5;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+            transition: all 0.3s ease;
         }
 
         .time-label {
-            font-size: 0.7rem;
+            font-size: 0.8rem;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
+            letter-spacing: 1px;
             opacity: 0.7;
-            font-weight: 400;
+            font-weight: 500;
             color: #bbb;
             text-align: center;
             white-space: nowrap;
         }
 
         .message {
-            font-size: 1.5rem;
+            font-size: 2rem;
             font-weight: 300;
             opacity: 0.9;
             display: none;
-            animation: fadeIn 2s ease-in-out;
-            margin-top: 2rem;
+            animation: celebration 2s ease-in-out infinite;
+            margin-top: 3rem;
             color: #f5f5f5;
+            text-shadow: 0 2px 20px rgba(255, 255, 255, 0.3);
         }
 
-        /* Easter Egg Game Styles */
-        .easter-egg-game {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.95);
-            z-index: 1000;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .game-header {
-            text-align: center;
-            margin-bottom: 2rem;
-        }
-
-        .game-title {
-            font-size: 2rem;
-            color: #4CAF50;
-            margin-bottom: 1rem;
-        }
-
-        .game-info {
-            display: flex;
-            gap: 2rem;
-            font-size: 1.2rem;
-            margin-bottom: 1rem;
-        }
-
-        .game-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 12px;
-            margin-bottom: 2rem;
-            max-width: 320px;
-        }
-
-        .mole-hole {
-            width: 80px;
-            height: 80px;
-            background: #2a2a2a;
-            border-radius: 50%;
-            border: 3px solid #444;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .mole {
-            width: 60px;
-            height: 60px;
-            background: #8B4513;
-            border-radius: 50%;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5rem;
-            animation: moleUp 0.3s ease-out;
-            border: 2px solid #654321;
-        }
-
-        .mole.active {
-            display: flex;
-        }
-
-        @keyframes moleUp {
-            0% { transform: translateY(100%); }
-            100% { transform: translateY(0); }
-        }
-
-        .mole:before {
-            content: '🐸';
-            font-size: 2rem;
-        }
-
-        .mole-hole:active {
-            transform: scale(0.95);
-        }
-
-        .game-controls {
-            display: flex;
-            gap: 1rem;
-        }
-
-        .game-btn {
-            padding: 10px 20px;
-            background: #4CAF50;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 1rem;
-            transition: background 0.3s ease;
-        }
-
-        .game-btn:hover {
-            background: #45a049;
-        }
-
-        .game-btn.secondary {
-            background: #666;
-        }
-
-        .game-btn.secondary:hover {
-            background: #777;
-        }
-
-        .hint {
-            position: absolute;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            font-size: 0.6rem;
-            opacity: 0.3;
-            text-align: center;
-            color: #666;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+        @keyframes celebration {
+            0%, 100% { 
+                transform: scale(1);
+                text-shadow: 0 2px 20px rgba(255, 255, 255, 0.3);
+            }
+            50% { 
+                transform: scale(1.05);
+                text-shadow: 0 2px 30px rgba(255, 215, 0, 0.5);
+            }
         }
 
         .pulse {
-            animation: pulse 2s infinite;
+            animation: urgentPulse 1s ease-in-out infinite;
         }
 
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
+        @keyframes urgentPulse {
+            0%, 100% { 
+                transform: scale(1);
+                box-shadow: 0 0 20px rgba(255, 0, 0, 0.3);
+            }
+            50% { 
+                transform: scale(1.08);
+                box-shadow: 0 0 40px rgba(255, 0, 0, 0.6);
+            }
         }
 
+        .fade-in {
+            animation: fadeIn 1.5s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { 
+                opacity: 0; 
+                transform: translateY(30px);
+            }
+            to { 
+                opacity: 1; 
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive */
         @media (max-width: 768px) {
             .countdown {
+                gap: 1rem;
+                padding: 2rem 1.5rem;
+            }
+            
+            .time-unit {
+                padding: 1.5rem 0.8rem;
+                min-width: 80px;
+            }
+            
+            .time-number {
+                font-size: 2.2rem;
+            }
+            
+            .time-label {
+                font-size: 0.7rem;
+            }
+
+            .title {
+                font-size: 2rem;
+                margin-bottom: 2rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .countdown {
                 gap: 0.8rem;
-                padding: 1.5rem;
+                padding: 1.5rem 1rem;
             }
             
             .time-unit {
@@ -247,54 +255,24 @@
                 font-size: 0.65rem;
             }
 
-            .game-grid {
-                max-width: 280px;
-                gap: 10px;
-            }
-
-            .mole-hole {
-                width: 65px;
-                height: 65px;
-            }
-
-            .mole {
-                width: 45px;
-                height: 45px;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .countdown {
-                gap: 0.6rem;
-                padding: 1rem;
-            }
-            
-            .time-unit {
-                padding: 1rem 0.4rem;
-                min-width: 60px;
-            }
-            
-            .time-number {
-                font-size: 1.8rem;
-            }
-            
-            .time-label {
-                font-size: 0.6rem;
-            }
-
-            .game-info {
-                gap: 1rem;
-                font-size: 1rem;
-            }
-
             .title {
-                font-size: 1.4rem;
+                font-size: 1.5rem;
+                margin-bottom: 1.5rem;
+            }
+
+            .message {
+                font-size: 1.5rem;
             }
         }
     </style>
 </head>
 <body>
-    <div class="container">
+    <!-- Particules de fond -->
+    <div class="particles" id="particles"></div>
+
+    <div class="container fade-in">
+        <h1 class="title"></h1>
+        
         <div class="countdown" id="countdown">
             <div class="time-unit">
                 <span class="time-number" id="days">00</span>
@@ -304,7 +282,7 @@
                 <span class="time-number" id="hours">00</span>
                 <span class="time-label">Heures</span>
             </div>
-            <div class="time-unit" id="secretTrigger">
+            <div class="time-unit">
                 <span class="time-number" id="minutes">00</span>
                 <span class="time-label">Minutes</span>
             </div>
@@ -317,50 +295,36 @@
         <div class="message" id="message">
             🎉 C'est le moment ! 🎉
         </div>
-
-        <div class="hint">
-            Cliquez 5 fois sur les minutes...
-        </div>
-    </div>
-
-    <!-- Easter Egg Game -->
-    <div class="easter-egg-game" id="easterEggGame">
-        <div class="game-header">
-            <h2 class="game-title">🎮 Tape la Grenouille ! 🐸</h2>
-            <div class="game-info">
-                <div>Score: <span id="gameScore">0</span></div>
-                <div>Temps: <span id="gameTime">30</span>s</div>
-            </div>
-        </div>
-        
-        <div class="game-grid" id="gameGrid">
-            <div class="mole-hole" data-hole="0"><div class="mole"></div></div>
-            <div class="mole-hole" data-hole="1"><div class="mole"></div></div>
-            <div class="mole-hole" data-hole="2"><div class="mole"></div></div>
-            <div class="mole-hole" data-hole="3"><div class="mole"></div></div>
-            <div class="mole-hole" data-hole="4"><div class="mole"></div></div>
-            <div class="mole-hole" data-hole="5"><div class="mole"></div></div>
-            <div class="mole-hole" data-hole="6"><div class="mole"></div></div>
-            <div class="mole-hole" data-hole="7"><div class="mole"></div></div>
-            <div class="mole-hole" data-hole="8"><div class="mole"></div></div>
-            <div class="mole-hole" data-hole="9"><div class="mole"></div></div>
-            <div class="mole-hole" data-hole="10"><div class="mole"></div></div>
-            <div class="mole-hole" data-hole="11"><div class="mole"></div></div>
-            <div class="mole-hole" data-hole="12"><div class="mole"></div></div>
-            <div class="mole-hole" data-hole="13"><div class="mole"></div></div>
-            <div class="mole-hole" data-hole="14"><div class="mole"></div></div>
-            <div class="mole-hole" data-hole="15"><div class="mole"></div></div>
-        </div>
-        
-        <div class="game-controls">
-            <button class="game-btn" id="startGame">Commencer</button>
-            <button class="game-btn secondary" id="closeGame">Fermer</button>
-        </div>
     </div>
 
     <script>
         // Date cible : Vendredi 22 Août 2025 à 23:00 (heure locale)
         const targetDate = new Date('2025-08-22T23:00:00').getTime();
+
+        // Créer les particules de fond
+        function createParticles() {
+            const particlesContainer = document.getElementById('particles');
+            const particleCount = 50;
+
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+                
+                // Position aléatoire
+                particle.style.left = Math.random() * 100 + '%';
+                
+                // Délai et durée d'animation aléatoires
+                particle.style.animationDelay = Math.random() * 20 + 's';
+                particle.style.animationDuration = (Math.random() * 10 + 10) + 's';
+                
+                // Taille aléatoire
+                const size = Math.random() * 3 + 1;
+                particle.style.width = size + 'px';
+                particle.style.height = size + 'px';
+                
+                particlesContainer.appendChild(particle);
+            }
+        }
 
         function updateCountdown() {
             const now = new Date().getTime();
@@ -372,15 +336,32 @@
                 const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
                 const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
 
-                document.getElementById('days').textContent = days.toString().padStart(2, '0');
-                document.getElementById('hours').textContent = hours.toString().padStart(2, '0');
-                document.getElementById('minutes').textContent = minutes.toString().padStart(2, '0');
-                document.getElementById('seconds').textContent = seconds.toString().padStart(2, '0');
+                // Mise à jour avec animation si les valeurs changent
+                updateTimeUnit('days', days);
+                updateTimeUnit('hours', hours);
+                updateTimeUnit('minutes', minutes);
+                updateTimeUnit('seconds', seconds);
 
-                // Animation pulse sur les secondes
-                if (timeLeft < 60000) { // Moins d'une minute
-                    document.getElementById('seconds').parentElement.classList.add('pulse');
+                // Animation pulse quand il reste moins d'une minute
+                const secondsUnit = document.getElementById('seconds').parentElement;
+                if (timeLeft < 60000) {
+                    if (!secondsUnit.classList.contains('pulse')) {
+                        secondsUnit.classList.add('pulse');
+                    }
+                } else {
+                    secondsUnit.classList.remove('pulse');
                 }
+
+                // Animation urgente quand il reste moins de 10 minutes
+                const allUnits = document.querySelectorAll('.time-unit');
+                if (timeLeft < 600000) { // 10 minutes
+                    allUnits.forEach(unit => {
+                        if (!unit.classList.contains('pulse')) {
+                            unit.classList.add('pulse');
+                        }
+                    });
+                }
+
             } else {
                 // Le décompte est terminé
                 document.getElementById('countdown').style.display = 'none';
@@ -388,189 +369,32 @@
             }
         }
 
-        // Easter Egg - Click counter on minutes
-        let clickCount = 0;
-        const secretTrigger = document.getElementById('secretTrigger');
-        
-        secretTrigger.addEventListener('click', () => {
-            clickCount++;
+        function updateTimeUnit(id, value) {
+            const element = document.getElementById(id);
+            const newValue = value.toString().padStart(2, '0');
             
-            // Effet visuel subtil
-            secretTrigger.style.transform = 'scale(1.05)';
-            setTimeout(() => {
-                secretTrigger.style.transform = 'scale(1)';
-            }, 100);
-            
-            if (clickCount >= 5) {
-                clickCount = 0;
-                openEasterEgg();
-            }
-            
-            // Reset du compteur après 3 secondes d'inactivité
-            setTimeout(() => {
-                if (clickCount < 5) {
-                    clickCount = 0;
-                }
-            }, 3000);
-        });
-
-        // Gestion du jeu Easter Egg
-        const easterEggGame = document.getElementById('easterEggGame');
-        const gameScore = document.getElementById('gameScore');
-        const gameTime = document.getElementById('gameTime');
-        const startGameBtn = document.getElementById('startGame');
-        const closeGameBtn = document.getElementById('closeGame');
-        const holes = document.querySelectorAll('.mole-hole');
-
-        let score = 0;
-        let timeLeft = 30;
-        let gameActive = false;
-        let gameInterval;
-        let moleTimeout;
-
-        function openEasterEgg() {
-            easterEggGame.style.display = 'flex';
-            resetGame();
-        }
-
-        function closeEasterEgg() {
-            easterEggGame.style.display = 'none';
-            if (gameActive) {
-                endGame();
-            }
-        }
-
-        function resetGame() {
-            score = 0;
-            timeLeft = 30;
-            gameActive = false;
-            gameScore.textContent = score;
-            gameTime.textContent = timeLeft;
-            startGameBtn.textContent = 'Commencer';
-            
-            // Cacher toutes les taupes
-            holes.forEach(hole => {
-                hole.querySelector('.mole').classList.remove('active');
-            });
-        }
-
-        function startGame() {
-            if (!gameActive) {
-                gameActive = true;
-                startGameBtn.textContent = 'En cours...';
+            if (element.textContent !== newValue) {
+                // Animation de changement
+                element.style.transform = 'scale(1.1)';
+                element.style.color = '#4CAF50';
                 
-                // Timer du jeu
-                gameInterval = setInterval(() => {
-                    timeLeft--;
-                    gameTime.textContent = timeLeft;
-                    
-                    if (timeLeft <= 0) {
-                        endGame();
-                    }
-                }, 1000);
-                
-                // Faire apparaître les taupes
-                showMole();
+                setTimeout(() => {
+                    element.textContent = newValue;
+                    element.style.transform = 'scale(1)';
+                    element.style.color = '#f5f5f5';
+                }, 150);
             }
         }
 
-        function endGame() {
-            gameActive = false;
-            clearInterval(gameInterval);
-            clearTimeout(moleTimeout);
-            
-            // Cacher toutes les taupes
-            holes.forEach(hole => {
-                hole.querySelector('.mole').classList.remove('active');
-            });
-            
-            startGameBtn.textContent = `Fini! Score: ${score}`;
-            
-            setTimeout(() => {
-                startGameBtn.textContent = 'Recommencer';
-            }, 2000);
-        }
-
-        function showMole() {
-            if (!gameActive) return;
-            
-            // Cacher toutes les taupes
-            holes.forEach(hole => {
-                hole.querySelector('.mole').classList.remove('active');
-            });
-            
-            // Calculer la progression du jeu (0 = début, 1 = fin)
-            const gameProgress = (30 - timeLeft) / 30;
-            
-            // Déterminer le nombre de grenouilles (1 au début, 2 après 10 secondes)
-            let numberOfMoles = 1;
-            if (gameProgress > 0.33) numberOfMoles = 2; // Après 10 secondes (10/30 = 0.33)
-            
-            // Choisir des trous aléatoires différents
-            const availableHoles = [...Array(holes.length).keys()];
-            const selectedHoles = [];
-            
-            for (let i = 0; i < numberOfMoles; i++) {
-                if (availableHoles.length > 0) {
-                    const randomIndex = Math.floor(Math.random() * availableHoles.length);
-                    const holeIndex = availableHoles.splice(randomIndex, 1)[0];
-                    selectedHoles.push(holeIndex);
-                    holes[holeIndex].querySelector('.mole').classList.add('active');
-                }
-            }
-            
-            // Calculer la vitesse (plus rapide avec le temps)
-            const baseSpeed = 800; // Vitesse de base (ms)
-            const minSpeed = 500;   // Vitesse minimum (moins rapide qu'avant)
-            const currentSpeed = Math.max(minSpeed, baseSpeed - (gameProgress * 300));
-            
-            // Calculer le délai avant la prochaine apparition
-            const baseDelay = 1000; // Délai de base
-            const minDelay = 400;   // Délai minimum (moins rapide qu'avant)
-            const currentDelay = Math.max(minDelay, baseDelay - (gameProgress * 600));
-            
-            // Programmer la disparition des taupes
-            moleTimeout = setTimeout(() => {
-                selectedHoles.forEach(holeIndex => {
-                    holes[holeIndex].querySelector('.mole').classList.remove('active');
-                });
-                
-                // Petit délai avant la prochaine vague
-                setTimeout(showMole, currentDelay * 0.2);
-            }, currentSpeed);
-        }
-
-        // Gestion des clics sur les taupes
-        holes.forEach(hole => {
-            hole.addEventListener('click', () => {
-                const mole = hole.querySelector('.mole');
-                if (mole.classList.contains('active') && gameActive) {
-                    score++;
-                    gameScore.textContent = score;
-                    mole.classList.remove('active');
-                    
-                    // Effet visuel
-                    hole.style.transform = 'scale(1.1)';
-                    setTimeout(() => {
-                        hole.style.transform = 'scale(1)';
-                    }, 100);
-                }
-            });
-        });
-
-        // Event listeners pour les boutons
-        startGameBtn.addEventListener('click', () => {
-            if (!gameActive && timeLeft <= 0) {
-                resetGame();
-            }
-            startGame();
-        });
-
-        closeGameBtn.addEventListener('click', closeEasterEgg);
-
-        // Mettre à jour le décompte chaque seconde
+        // Initialisation
+        createParticles();
         updateCountdown();
         setInterval(updateCountdown, 1000);
+
+        // Animation au chargement
+        window.addEventListener('load', () => {
+            document.querySelector('.container').classList.add('fade-in');
+        });
     </script>
 </body>
 </html>
