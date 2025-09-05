@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>22 Août 2025</title>
+    <title>Countdown - 3 Octobre 2025</title>
     <style>
         * {
             margin: 0;
@@ -13,7 +13,7 @@
 
         body {
             font-family: 'Arial', sans-serif;
-            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+            background: linear-gradient(135deg, #2c1810 0%, #8b4513 50%, #2c1810 100%);
             min-height: 100vh;
             display: flex;
             justify-content: center;
@@ -23,255 +23,215 @@
             position: relative;
         }
 
-        /* Particules de fond animées */
+        /* Particules subtiles */
         .particles {
             position: absolute;
             width: 100%;
             height: 100%;
-            overflow: hidden;
+            pointer-events: none;
             z-index: 1;
         }
 
         .particle {
             position: absolute;
-            width: 2px;
-            height: 2px;
-            background: rgba(255, 255, 255, 0.1);
+            width: 3px;
+            height: 3px;
+            background: rgba(255, 215, 0, 0.3);
             border-radius: 50%;
             animation: float linear infinite;
         }
 
         @keyframes float {
             0% {
-                transform: translateY(100vh) rotate(0deg);
+                transform: translateY(100vh);
                 opacity: 0;
             }
-            10% {
-                opacity: 1;
-            }
-            90% {
+            10%, 90% {
                 opacity: 1;
             }
             100% {
-                transform: translateY(-10px) rotate(360deg);
+                transform: translateY(-100px);
                 opacity: 0;
             }
         }
 
+        /* Container principal */
         .container {
             text-align: center;
-            padding: 2rem;
+            padding: 3rem 2rem;
             max-width: 600px;
             width: 100%;
             z-index: 10;
             position: relative;
         }
 
+        /* Titre */
         .title {
-            font-size: 2.5rem;
+            font-size: 2.2rem;
             font-weight: 300;
-            margin-bottom: 3rem;
-            opacity: 0.9;
-            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
-            animation: glow 3s ease-in-out infinite alternate;
+            margin-bottom: 4rem;
+            color: #ffd700;
+            position: relative;
         }
 
-        @keyframes glow {
-            from {
-                text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
-            }
-            to {
-                text-shadow: 0 2px 20px rgba(255, 255, 255, 0.1);
-            }
+        .title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, #ffd700, transparent);
         }
 
+        /* Countdown grid */
         .countdown {
-            display: flex;
-            justify-content: center;
-            gap: 1.5rem;
-            background: rgba(42, 42, 42, 0.8);
-            border-radius: 20px;
-            padding: 3rem 2rem;
-            box-shadow: 
-                0 8px 32px rgba(0, 0, 0, 0.3),
-                inset 0 1px 0 rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        /* Unités de temps */
+        .time-unit {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 215, 0, 0.2);
+            border-radius: 12px;
+            padding: 2rem 1rem;
+            transition: all 0.3s ease;
+            position: relative;
             backdrop-filter: blur(10px);
         }
 
-        .time-unit {
-            background: rgba(51, 51, 51, 0.9);
-            border-radius: 15px;
-            padding: 2rem 1rem;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            transition: all 0.3s ease;
-            min-width: 100px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            user-select: none;
-            backdrop-filter: blur(5px);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .time-unit::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
-            transition: left 0.5s;
-        }
-
         .time-unit:hover {
-            background: rgba(58, 58, 58, 0.9);
+            border-color: rgba(255, 215, 0, 0.4);
             transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
-        }
-
-        .time-unit:hover::before {
-            left: 100%;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
         }
 
         .time-number {
-            font-size: 3rem;
-            font-weight: 600;
+            font-size: 2.8rem;
+            font-weight: 400;
             display: block;
             margin-bottom: 0.5rem;
-            color: #f5f5f5;
-            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+            color: #ffd700;
             transition: all 0.3s ease;
         }
 
         .time-label {
-            font-size: 0.8rem;
+            font-size: 0.9rem;
             text-transform: uppercase;
             letter-spacing: 1px;
             opacity: 0.7;
-            font-weight: 500;
-            color: #bbb;
-            text-align: center;
-            white-space: nowrap;
+            color: #d4af37;
         }
 
+        /* Animation pour les changements */
+        .time-number.updating {
+            transform: scale(1.1);
+            color: #ffff00;
+        }
+
+        /* Animation pulse pour l'urgence */
+        .urgent {
+            animation: subtlePulse 2s ease-in-out infinite;
+        }
+
+        @keyframes subtlePulse {
+            0%, 100% {
+                border-color: rgba(255, 215, 0, 0.3);
+            }
+            50% {
+                border-color: rgba(255, 215, 0, 0.6);
+                box-shadow: 0 0 20px rgba(255, 215, 0, 0.2);
+            }
+        }
+
+        /* Message final */
         .message {
-            font-size: 2rem;
+            font-size: 1.8rem;
             font-weight: 300;
-            opacity: 0.9;
             display: none;
-            animation: celebration 2s ease-in-out infinite;
-            margin-top: 3rem;
-            color: #f5f5f5;
-            text-shadow: 0 2px 20px rgba(255, 255, 255, 0.3);
-        }
-
-        @keyframes celebration {
-            0%, 100% { 
-                transform: scale(1);
-                text-shadow: 0 2px 20px rgba(255, 255, 255, 0.3);
-            }
-            50% { 
-                transform: scale(1.05);
-                text-shadow: 0 2px 30px rgba(255, 215, 0, 0.5);
-            }
-        }
-
-        .pulse {
-            animation: urgentPulse 1s ease-in-out infinite;
-        }
-
-        @keyframes urgentPulse {
-            0%, 100% { 
-                transform: scale(1);
-                box-shadow: 0 0 20px rgba(255, 0, 0, 0.3);
-            }
-            50% { 
-                transform: scale(1.08);
-                box-shadow: 0 0 40px rgba(255, 0, 0, 0.6);
-            }
-        }
-
-        .fade-in {
-            animation: fadeIn 1.5s ease-in-out;
+            color: #ffd700;
+            margin-top: 2rem;
+            opacity: 0;
+            animation: fadeIn 2s ease-in-out forwards;
         }
 
         @keyframes fadeIn {
-            from { 
-                opacity: 0; 
-                transform: translateY(30px);
+            from {
+                opacity: 0;
+                transform: translateY(20px);
             }
-            to { 
-                opacity: 1; 
+            to {
+                opacity: 1;
                 transform: translateY(0);
             }
+        }
+
+        /* Détail asiatique subtil */
+        .accent {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 1.2rem;
+            opacity: 0.4;
         }
 
         /* Responsive */
         @media (max-width: 768px) {
             .countdown {
-                gap: 1rem;
-                padding: 2rem 1.5rem;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1.5rem;
             }
             
-            .time-unit {
-                padding: 1.5rem 0.8rem;
-                min-width: 80px;
+            .title {
+                font-size: 1.8rem;
+                margin-bottom: 3rem;
             }
             
             .time-number {
                 font-size: 2.2rem;
             }
             
-            .time-label {
-                font-size: 0.7rem;
-            }
-
-            .title {
-                font-size: 2rem;
-                margin-bottom: 2rem;
+            .time-unit {
+                padding: 1.5rem 1rem;
             }
         }
 
         @media (max-width: 480px) {
-            .countdown {
-                gap: 0.8rem;
-                padding: 1.5rem 1rem;
+            .container {
+                padding: 2rem 1rem;
             }
             
-            .time-unit {
-                padding: 1.2rem 0.6rem;
-                min-width: 70px;
+            .title {
+                font-size: 1.5rem;
             }
             
             .time-number {
                 font-size: 2rem;
             }
             
-            .time-label {
-                font-size: 0.65rem;
+            .countdown {
+                gap: 1rem;
             }
-
-            .title {
-                font-size: 1.5rem;
-                margin-bottom: 1.5rem;
-            }
-
-            .message {
-                font-size: 1.5rem;
+            
+            .time-unit {
+                padding: 1.2rem 0.8rem;
             }
         }
     </style>
 </head>
 <body>
-    <!-- Particules de fond -->
+    <!-- Particules subtiles -->
     <div class="particles" id="particles"></div>
 
-    <div class="container fade-in">
-        <h1 class="title"></h1>
+    <!-- Accent asiatique discret -->
+    <div class="accent">竹</div>
+
+    <div class="container">
+        <h1 class="title">3 Octobre 2025</h1>
         
         <div class="countdown" id="countdown">
             <div class="time-unit">
@@ -293,39 +253,33 @@
         </div>
         
         <div class="message" id="message">
-            🎉 C'est le moment ! 🎉
+            Le moment est arrivé
         </div>
     </div>
 
     <script>
-        // Date cible : Vendredi 22 Août 2025 à 23:00 (heure locale)
-        const targetDate = new Date('2025-08-22T23:00:00').getTime();
+        // Date cible : Vendredi 3 Octobre 2025 à 23:00
+        const targetDate = new Date('2025-10-03T23:00:00').getTime();
 
-        // Créer les particules de fond
+        // Créer quelques particules subtiles
         function createParticles() {
             const particlesContainer = document.getElementById('particles');
-            const particleCount = 50;
+            const particleCount = 20;
 
             for (let i = 0; i < particleCount; i++) {
                 const particle = document.createElement('div');
                 particle.classList.add('particle');
                 
-                // Position aléatoire
+                // Position et timing aléatoires
                 particle.style.left = Math.random() * 100 + '%';
-                
-                // Délai et durée d'animation aléatoires
-                particle.style.animationDelay = Math.random() * 20 + 's';
-                particle.style.animationDuration = (Math.random() * 10 + 10) + 's';
-                
-                // Taille aléatoire
-                const size = Math.random() * 3 + 1;
-                particle.style.width = size + 'px';
-                particle.style.height = size + 'px';
+                particle.style.animationDelay = Math.random() * 15 + 's';
+                particle.style.animationDuration = (Math.random() * 10 + 15) + 's';
                 
                 particlesContainer.appendChild(particle);
             }
         }
 
+        // Mettre à jour le countdown
         function updateCountdown() {
             const now = new Date().getTime();
             const timeLeft = targetDate - now;
@@ -336,52 +290,38 @@
                 const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
                 const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
 
-                // Mise à jour avec animation si les valeurs changent
+                // Mettre à jour avec animation subtile
                 updateTimeUnit('days', days);
                 updateTimeUnit('hours', hours);
                 updateTimeUnit('minutes', minutes);
                 updateTimeUnit('seconds', seconds);
 
-                // Animation pulse quand il reste moins d'une minute
-                const secondsUnit = document.getElementById('seconds').parentElement;
-                if (timeLeft < 60000) {
-                    if (!secondsUnit.classList.contains('pulse')) {
-                        secondsUnit.classList.add('pulse');
-                    }
+                // Animation d'urgence subtile
+                const timeUnits = document.querySelectorAll('.time-unit');
+                if (timeLeft < 600000) { // Moins de 10 minutes
+                    timeUnits.forEach(unit => unit.classList.add('urgent'));
                 } else {
-                    secondsUnit.classList.remove('pulse');
-                }
-
-                // Animation urgente quand il reste moins de 10 minutes
-                const allUnits = document.querySelectorAll('.time-unit');
-                if (timeLeft < 600000) { // 10 minutes
-                    allUnits.forEach(unit => {
-                        if (!unit.classList.contains('pulse')) {
-                            unit.classList.add('pulse');
-                        }
-                    });
+                    timeUnits.forEach(unit => unit.classList.remove('urgent'));
                 }
 
             } else {
-                // Le décompte est terminé
+                // Countdown terminé
                 document.getElementById('countdown').style.display = 'none';
                 document.getElementById('message').style.display = 'block';
             }
         }
 
+        // Mettre à jour une unité de temps avec animation légère
         function updateTimeUnit(id, value) {
             const element = document.getElementById(id);
             const newValue = value.toString().padStart(2, '0');
             
             if (element.textContent !== newValue) {
-                // Animation de changement
-                element.style.transform = 'scale(1.1)';
-                element.style.color = '#4CAF50';
+                element.classList.add('updating');
                 
                 setTimeout(() => {
                     element.textContent = newValue;
-                    element.style.transform = 'scale(1)';
-                    element.style.color = '#f5f5f5';
+                    element.classList.remove('updating');
                 }, 150);
             }
         }
@@ -390,11 +330,6 @@
         createParticles();
         updateCountdown();
         setInterval(updateCountdown, 1000);
-
-        // Animation au chargement
-        window.addEventListener('load', () => {
-            document.querySelector('.container').classList.add('fade-in');
-        });
     </script>
 </body>
 </html>
